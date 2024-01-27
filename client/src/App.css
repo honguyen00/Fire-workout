@@ -1,0 +1,15 @@
+#root {
+  width: 100%;
+  text-align: center;
+  background-color: #000000;
+  display: flex;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+.active {
+  background-color: #666;
+}
