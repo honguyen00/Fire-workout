@@ -13,7 +13,7 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
-    errorElement: <h1>404! Sorry, the page you are trying to access does not exist.</h1>,
+    // errorElement: <h1>404! Sorry, the page you are trying to access does not exist.</h1>,
     children: [
       {
         index: true,
