@@ -1,13 +1,7 @@
 import './App.css'
-import { Route, Routes } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { ConfigProvider, Layout, theme } from 'antd'
-
-import Profile from './pages/Profile'
-import History from './pages/History'
-import Workout from './pages/Workout'
-import Excercises from './pages/Exercises'
-import Measure from './pages/Measure'
-import Login from './pages/Login'
+import NavBar from './components/Navbar'
 
 function App() {
   return (
@@ -18,8 +12,8 @@ function App() {
       colorSuccess: '#a3d721',
       colorInfo: '#6530ae',
       colorWarning: '#de9e29',
-      colorError: '#c2282a',
-      colorLink: '#1677ff',
+      colorError: '#ff5c5e',
+      colorLink: '#A6CBFC',
       colorBgBase: '#000000',
       sizeStep: 5,
       sizeUnit: 2,
@@ -28,15 +22,9 @@ function App() {
     algorithm: theme.darkAlgorithm
   }}>
   <Layout>
-  <Routes>
-    <Route path='/profile' element={<Profile />}></Route>
-    <Route path='/history' element={<History />}></Route>
-    <Route path='/workout' element={<Workout />}></Route>
-    <Route path='/exercises' element={<Excercises />}></Route>
-    <Route path='/measure' element={<Measure />}></Route>
-    <Route path='/' element={<Login />}></Route>
-  </Routes>
+  <Outlet />
   </Layout>
+  {window.location.pathname != '/' ? <NavBar /> : null}
   </ConfigProvider>
   </>
   )
