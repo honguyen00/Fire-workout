@@ -10,7 +10,7 @@
 // };
 
 const db = require('../config/connection');
-const Exercise = require('../models/Exercise');
+const Exercises = require('../models/Exercises');
 const cleanDB = require('./cleanDB');
 
 const listOfMuscle = [
@@ -42,7 +42,7 @@ const option = {
 
 db.once('open', async () => {
     // clean database
-    await cleanDB("Exercise", "exercises");
+    await cleanDB("Exercises", "exercises");
     
     // Create an array of promises for each fetch call
     const fetchPromises = listOfMuscle.map(muscle => {
@@ -62,7 +62,7 @@ db.once('open', async () => {
     // Use Promise.all to wait for all fetch promises to resolve
     Promise.all(fetchPromises)
         .then(async dataArray => {
-            await Exercise.insertMany([].concat(...dataArray));
+            await Exercises.insertMany([].concat(...dataArray));
         }).then(() => {
             console.log('all done!');
             process.exit(0);

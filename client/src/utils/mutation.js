@@ -23,3 +23,13 @@ export const ADD_USER = gql`
         }
     }
 `;
+
+export const UPDATE_PASSWORD = gql`
+mutation Mutation($password: String!) {
+    updatePassword(password: $password) {
+      _id
+      email
+      username
+    }
+  }
+`;

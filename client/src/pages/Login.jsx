@@ -2,7 +2,7 @@ import { Button, Form, Input } from 'antd';
 import Auth from '../utils/auth';
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER, ADD_USER } from '../utils/mutation';
-
+import { passwordValidator, emailValidator } from '../helpers/inputValidations'
 
 const Login = () => {
     const [loginForm] = Form.useForm();
@@ -12,25 +12,7 @@ const Login = () => {
     const [addUser, { error2, data2 }] = useMutation(ADD_USER);
 
     if(!Auth.loggedIn()) {
-    //custom password regex
-    const passwordValidator = async (_, value) => {
-        const pattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
-        if (value && value.match(pattern)) {
-            return Promise.resolve();
-        }
     
-        return Promise.reject(new Error('Please enter a valid password!'))
-    }
-    //custom email regex
-    const emailValidator = async (_, value) => {
-        const pattern = /.+@[^@]+\.[^@]{2,}$/
-        if (value && value.match(pattern)) {
-            return Promise.resolve();
-        }
-    
-        return Promise.reject(new Error('Please enter a valid email!'))
-    }
-
     // event handler for submit button click
     const onFinish = async (values) => {
         if (Object.keys(values).length === 2) {
@@ -74,6 +56,7 @@ const Login = () => {
             flexDirection: 'column',
             justifyContent: 'center',
             height: '100%',
+            textAlign: 'center'
         }}>
         <Form onFinish={onFinish} form={loginForm} id='login-form' name='login' autoComplete='off' labelCol={{span: 8}} wrapperCol={{span: 8}} 
         style={{padding: '0 1rem'}}>

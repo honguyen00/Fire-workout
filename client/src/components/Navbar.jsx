@@ -12,8 +12,7 @@ const CustomNav = styled.nav`
     position: absolute;
     bottom: 0;
     width: 100%;
-    border-top-left-radius: 2rem;
-    border-top-right-radius: 2rem;
+    height: 10%;
     box-shadow: 0px 5px 10px white
 `;
 

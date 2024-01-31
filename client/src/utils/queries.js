@@ -9,3 +9,16 @@ query Query {
     }
   }
 `;
+
+export const GET_EXERCISES = gql`
+query Query {
+    getExercises {
+      _id
+      difficulty
+      equipment
+      instructions
+      muscle
+      name
+    }
+  }
+`;
