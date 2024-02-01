@@ -37,7 +37,6 @@ h1 {
   line-height: 1.1;
   padding: 0;
   margin: 0 0 1rem 0;
-  text-align: center;
 }
 
 .active {
@@ -58,7 +57,7 @@ h1 {
 
 .container {
   height: 90%;
-  padding: 1rem;
+  padding: 0.5rem 0.5rem;
   overflow-y: auto;
 }
 
@@ -68,4 +67,41 @@ a:hover {
 
 button {
   text-align: center;
+}
+
+.icon-size {
+  font-size: 20px;
+  line-height: 1.15 !important;
+  height: fit-content;
+}
+
+@media screen and (min-width: 768px) {
+  .container {
+    padding: 1rem 2rem;
+    font-size: medium !important;
+  }
+  .icon-size {
+    font-size: 30px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .container {
+    padding: 2rem 2rem;
+    font-size: large !important;
+  }
+  h1 {
+    margin-bottom: 2rem;
+  }
+}
+
+
+@media screen and (min-width: 1200px) {
+  .container {
+    padding: 2rem 3rem;
+    font-size: larger !important;
+  }
+  .icon-size {
+    font-size: 35px;
+  }
 }

@@ -1,4 +1,3 @@
-import './App.css'
 import { Outlet } from 'react-router-dom'
 import { ConfigProvider, theme } from 'antd'
 import NavBar from './components/Navbar'

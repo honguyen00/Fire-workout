@@ -46,7 +46,7 @@ export default function Profile() {
                 <>
                     {contextHolder}
                     <h1>Profile</h1>
-                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-around'}}>
+                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                         <div style={{display: 'flex', alignItems: 'center'}}>
                             <Avatar icon={<UserOutlined/>} size={{ xs: 32, sm: 40, md: 64, lg: 80, xl: 100, xxl: 120}} style={{marginRight: '0.5rem'}}/>
                             <div>

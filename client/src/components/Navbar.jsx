@@ -8,7 +8,6 @@ const CustomNav = styled.nav`
     display: flex;
     justify-content: space-around;
     align-items: stretch;
-    padding : 0 1rem;
     position: absolute;
     bottom: 0;
     width: 100%;
