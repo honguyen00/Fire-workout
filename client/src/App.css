@@ -83,6 +83,14 @@ button {
   background-color: #111;
 }
 
+.responsive-button {
+  width: 100%;
+}
+
+.ant-drawer .ant-drawer-content {
+  overflow-y: hidden !important;
+}
+
 @media screen and (min-width: 768px) {
   .container {
     padding: 1rem 2rem;
@@ -91,12 +99,18 @@ button {
   .float-button {
     margin-right: 2rem;
   }
+  .responsive-button {
+    width: 50%;
+  }
 }
 
 @media screen and (min-width: 992px) {
   .container {
     padding: 2rem 2rem;
     font-size: large !important;
+  }
+  .responsive-button {
+    width: 30%;
   }
 }
 
