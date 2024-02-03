@@ -71,8 +71,11 @@ button {
 
 .icon-size {
   font-size: 20px;
-  line-height: 1.15 !important;
   height: fit-content;
+}
+.float-button {
+  right: 1rem;
+  margin-right: 0.5rem;
 }
 
 @media screen and (min-width: 768px) {
@@ -80,8 +83,8 @@ button {
     padding: 1rem 2rem;
     font-size: medium !important;
   }
-  .icon-size {
-    font-size: 30px;
+  .float-button {
+    margin-right: 2rem;
   }
 }
 
@@ -89,9 +92,6 @@ button {
   .container {
     padding: 2rem 2rem;
     font-size: large !important;
-  }
-  h1 {
-    margin-bottom: 2rem;
   }
 }
 
@@ -101,7 +101,7 @@ button {
     padding: 2rem 3rem;
     font-size: larger !important;
   }
-  .icon-size {
-    font-size: 35px;
+  .float-button {
+    margin-right: 3rem;
   }
 }

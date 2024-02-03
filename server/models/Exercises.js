@@ -18,10 +18,14 @@ const exerciseSchema = new Schema(
     },
     difficulty: {
         type: String
+    },
+    customed: {
+      type: Boolean,
+      default: false
     }
   }
 );
 
 const Exercises = model('Exercises', exerciseSchema);
 
-module.exports = Exercises;
+module.exports = { Exercises, exerciseSchema };

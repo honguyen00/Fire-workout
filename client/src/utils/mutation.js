@@ -33,3 +33,16 @@ mutation Mutation($password: String!) {
     }
   }
 `;
+
+export const CREATE_EXERCISE = gql`
+mutation Mutation($exerciseName: String!, $muscle: String!) {
+    createNewExercise(exerciseName: $exerciseName, muscle: $muscle) {
+      _id
+      created_exercises {
+        _id
+        name
+        muscle
+      }
+    }
+  }
+`

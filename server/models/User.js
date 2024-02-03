@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose');
 const bcrypt = require('bcrypt');
+const { exerciseSchema } = require('./Exercises')
 
 const userSchema = new Schema(
   {
@@ -18,6 +19,7 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    created_exercises: [exerciseSchema]
   },
   // set this to use virtual below
   {

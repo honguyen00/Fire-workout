@@ -10,8 +10,22 @@ const resolvers = {
             }
             throw AuthenticationError;
         },
-        getExercises: async (parent, args) => {
-            return Exercises.find({})
+        getExercises: async (parent, args, context) => {
+            if(context.user) {
+                const defaultEx = await Exercises.find({});
+                const user = await User.findById(context.user._id).populate('created_exercises')
+                const allExercise = defaultEx.concat(user.created_exercises);
+                return allExercise;
+            }
+            throw AuthenticationError
+            
+        },
+        getPersonalExercises: async (parent, args, context) => {
+            if (context.user) {
+                const user = await User.findById(context.user._id).populate('created_exercises');
+                return user.created_exercises;
+            }   
+            throw AuthenticationError
         }
     },
 
@@ -44,6 +58,15 @@ const resolvers = {
                 user.password = args.password
                 await user.save();
                 return user;
+            }
+            throw AuthenticationError;
+        },
+        createNewExercise: async (parent, args, context) => {
+            if (context.user) {
+                const user = await User.findById(context.user._id);
+                user.created_exercises.push({name: args.exerciseName, muscle: args.muscle, customed: true});
+                await user.save();
+                return user
             }
             throw AuthenticationError;
         }

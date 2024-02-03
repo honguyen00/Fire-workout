@@ -31,7 +31,7 @@ export default function Profile() {
         if (newUser) {
             messageAPI.open({
                 type: 'success',
-                content: 'Update password successfully'
+                content: 'Update password successfully!'
             })
             handleCancel();
         } 

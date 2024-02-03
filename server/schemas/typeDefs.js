@@ -3,6 +3,7 @@ const typeDefs = `
         _id: ID
         username: String
         email: String
+        created_exercises: [Exercise]!
     }
 
     type Exercise {
@@ -22,12 +23,14 @@ const typeDefs = `
     type Query {
         me: User
         getExercises: [Exercise]
+        getPersonalExercises: [Exercise]
     }
 
     type Mutation {
         login(email: String!, password: String!): Auth
         addUser(username: String!, email: String!, password: String!): Auth
         updatePassword(password: String!): User
+        createNewExercise(exerciseName: String!, muscle: String!): User
     }
 `;
 
