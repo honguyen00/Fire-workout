@@ -7,7 +7,7 @@ import Profile from './pages/Profile.jsx'
 import Exercises from './pages/Exercises.jsx'
 import Workout from './pages/Workout.jsx'
 import History from './pages/History.jsx'
-import Measure from './pages/Measure.jsx'
+import Support from './pages/Support.jsx'
 
 
 const router = createBrowserRouter([
@@ -37,8 +37,8 @@ const router = createBrowserRouter([
         element: <Exercises/>
       },
       {
-        path: '/measure',
-        element: <Measure />
+        path: '/support',
+        element: <Support />
       }
     ]
   }

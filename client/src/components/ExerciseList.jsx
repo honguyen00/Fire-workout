@@ -1,4 +1,5 @@
 import { List, Collapse } from 'antd';
+import ExerciseDetails from './ExerciseDetails';
 
 const ExerciseList = ({ groupedExercises }) => {
   return (
@@ -8,7 +9,7 @@ const ExerciseList = ({ groupedExercises }) => {
           <List
             dataSource={exercises}
             renderItem={(exercise) => (
-              <List.Item>{exercise.name}</List.Item>
+              <ExerciseDetails {...exercise}/>
             )}
           />
         </Collapse.Panel>

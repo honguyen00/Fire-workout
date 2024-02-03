@@ -13,6 +13,7 @@ const typeDefs = `
         equipment: String
         instructions: String
         difficulty: String
+        customed: Boolean
     }
 
     type Auth {

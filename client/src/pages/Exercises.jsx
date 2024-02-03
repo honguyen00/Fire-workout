@@ -8,6 +8,14 @@ import { useState } from 'react';
 import { CREATE_EXERCISE } from '../utils/mutation';
 
 export default function Exercises() {
+    const [musclesModal, setMusclesModal] = useState(false);
+    const [exerciseModal, setExerciseModal] = useState(false);
+    const [selectedMuscles, setSelectedMuscles] = useState([]);
+    const {loading, data} = useQuery(GET_EXERCISES);
+    const [exerciseForm] = Form.useForm();
+    const [createdExercise, {error, data2}] = useMutation(CREATE_EXERCISE);
+    const [messageAPI, contextHolder] = message.useMessage();
+    
     //list of muscle
     const listOfMuscles = [
         "abdominals",
@@ -34,11 +42,6 @@ export default function Exercises() {
             .join(' '),
         value: muscle
         }));
-
-    const [musclesModal, setMusclesModal] = useState(false);
-    const [exerciseModal, setExerciseModal] = useState(false);
-    const [selectedMuscles, setSelectedMuscles] = useState([]);
-    
     //function to groupExercises by their initial letter
     const groupedExercises = (exercises) => {
         const newExerciseList = [...exercises]
@@ -54,13 +57,13 @@ export default function Exercises() {
 
     //filter exercise by muscles groups
     const filterExercises = (muscles, exercises) => {
-        if(muscles.length == 0) return exercises;
+        if(muscles.length == 0 || !muscles) return exercises;
         const filtered = exercises.filter((exercise) => {
             return muscles.includes(exercise.muscle);
         });
         return filtered;
     }
-
+    // validate dropdown body part
     const validateDropdown = (_, value) => {
         // Add your custom validation logic here
         if (!value) {
@@ -68,14 +71,6 @@ export default function Exercises() {
         }
         return Promise.resolve();
     };
-
-    const {loading, data} = useQuery(GET_EXERCISES);
-
-    const [exerciseForm] = Form.useForm();
-
-    const [createdExercise, {error, data2}] = useMutation(CREATE_EXERCISE);
-
-    const [messageAPI, contextHolder] = message.useMessage();
 
     //create new exercise in database
     const onFinish = async (values) => {
@@ -95,7 +90,6 @@ export default function Exercises() {
             exerciseForm.setFields([{name: 'bodyPart', errors: ['Unable to create new exercise']}, {
                 name: 'exerciseName', errors: ['']
             }]);
-            console.error(error)
         }
     }
 
@@ -134,6 +128,7 @@ export default function Exercises() {
                     centered
                     open={musclesModal}
                     onOk={() => setMusclesModal(false)}
+                    onCancel={() => setMusclesModal(false)}
                     cancelButtonProps={{ style: { display: 'none' } }} 
                 >
                         <Checkbox.Group options={options} onChange={values => setSelectedMuscles(values)}/>

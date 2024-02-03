@@ -78,6 +78,11 @@ button {
   margin-right: 0.5rem;
 }
 
+.hoverable-item:hover {
+  cursor: pointer;
+  background-color: #111;
+}
+
 @media screen and (min-width: 768px) {
   .container {
     padding: 1rem 2rem;
