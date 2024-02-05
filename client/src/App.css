@@ -20,6 +20,11 @@ html, body, #root {
   height: 100%;
 }
 
+::-webkit-scrollbar {
+  width: 0;  /* Remove scrollbar space */
+  background: transparent;  /* Optional: hide scrollbar track */
+}
+
 * {
   box-sizing: border-box;
 }
@@ -74,7 +79,7 @@ button {
   height: fit-content;
 }
 .float-button {
-  right: 1rem;
+  right: 0rem;
   margin-right: 0.5rem;
 }
 

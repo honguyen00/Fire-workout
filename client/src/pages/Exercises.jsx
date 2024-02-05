@@ -7,15 +7,16 @@ import { Button, Checkbox, Modal, FloatButton, Tooltip, Input, Dropdown, Form, S
 import { useState } from 'react';
 import { CREATE_EXERCISE } from '../utils/mutation';
 
-export default function Exercises() {
+export default function Exercises({ isExerciseModalOpen, exerciseList, setExerciseList }) {
     const [musclesModal, setMusclesModal] = useState(false);
     const [exerciseModal, setExerciseModal] = useState(false);
     const [selectedMuscles, setSelectedMuscles] = useState([]);
-    const {loading, data} = useQuery(GET_EXERCISES);
+    const {loading, data, refetch} = useQuery(GET_EXERCISES);
     const [exerciseForm] = Form.useForm();
     const [createdExercise, {error, data2}] = useMutation(CREATE_EXERCISE);
     const [messageAPI, contextHolder] = message.useMessage();
-    
+    let exercisesList;
+
     //list of muscle
     const listOfMuscles = [
         "abdominals",
@@ -85,6 +86,7 @@ export default function Exercises() {
                 })
                 exerciseForm.resetFields();
                 setExerciseModal(false)
+                refetch();
             } 
         } catch (error) {
             exerciseForm.setFields([{name: 'bodyPart', errors: ['Unable to create new exercise']}, {
@@ -93,7 +95,6 @@ export default function Exercises() {
         }
     }
 
-    let exercisesList;
     //authentication
     if (Auth.loggedIn()) {
         if(loading) {
@@ -111,11 +112,11 @@ export default function Exercises() {
                             setMusclesModal(true)
                         }}><FilterOutlined /></Button>
                     </div>
-                    <ExerciseList groupedExercises={newList} />
-                    <FloatButton style={{
+                    <ExerciseList groupedExercises={newList} isExerciseModalOpen={isExerciseModalOpen} exerciseList={exerciseList} setExerciseList={setExerciseList}/>
+                    <FloatButton style={!isExerciseModalOpen ? {
                         position: 'absolute',
                         bottom: '12%'
-                    }} className='float-button' type='primary' icon={<PlusOutlined />} 
+                    } : {position: 'absolute', bottom: '60px'}} className={!isExerciseModalOpen ? 'float-button' : null} type='primary' icon={<PlusOutlined />} 
                     tooltip={<><div>Missing your favourite exercise?</div><div>Add now!</div></>}
                     onClick={() => {
                         setExerciseModal(true)
@@ -136,7 +137,7 @@ export default function Exercises() {
                 <Modal
                 // create new exercise
                     title="Create new exercise"
-                    top
+                    centered
                     open={exerciseModal}
                     onOk={() => setExerciseModal(false)}
                     onCancel={()=> setExerciseModal(false)}

@@ -1,7 +1,7 @@
 import { List, Collapse } from 'antd';
 import ExerciseDetails from './ExerciseDetails';
 
-const ExerciseList = ({ groupedExercises }) => {
+const ExerciseList = ({ groupedExercises, isExerciseModalOpen, exerciseList, setExerciseList }) => {
   return (
     <Collapse accordion>
       {Object.entries(groupedExercises).map(([letter, exercises]) => (
@@ -9,7 +9,7 @@ const ExerciseList = ({ groupedExercises }) => {
           <List
             dataSource={exercises}
             renderItem={(exercise) => (
-              <ExerciseDetails {...exercise}/>
+              <ExerciseDetails exercise={exercise} isExerciseModalOpen={isExerciseModalOpen} exerciseList={exerciseList} setExerciseList={setExerciseList}/>
             )}
           />
         </Collapse.Panel>

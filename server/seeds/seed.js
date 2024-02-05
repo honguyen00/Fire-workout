@@ -10,7 +10,7 @@
 // };
 
 const db = require('../config/connection');
-const Exercises = require('../models/Exercises');
+const { Exercises } = require('../models/Exercises');
 const cleanDB = require('./cleanDB');
 
 const listOfMuscle = [

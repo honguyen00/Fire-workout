@@ -46,3 +46,20 @@ mutation Mutation($exerciseName: String!, $muscle: String!) {
     }
   }
 `
+
+export const ADD_WORKOUT = gql`
+mutation Mutation($title: String!, $date: String!, $exercises: [ExerciseInput]) {
+  addWorkout(title: $title, date: $date, exercises: $exercises) {
+    _id
+    title
+    date
+    exercises {
+      _id
+      sets {
+        repetitions
+        weight
+      }
+    }
+  }
+}
+`

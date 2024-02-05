@@ -3,7 +3,7 @@ import { Divider, Typography } from 'antd';
 const { Title, Paragraph, Text, Link } = Typography;
 import { useState } from 'react'
 
-export default function ExerciseDetails(props) {
+export default function ExerciseDetails({exercise, isExerciseModalOpen, exerciseList, setExerciseList}) {
     const [exerciseDetailsModal, setExerciseDetailsModal] = useState(false);
 
     const handleItemClick = () => {
@@ -14,25 +14,29 @@ export default function ExerciseDetails(props) {
         setExerciseDetailsModal(false)
     }
 
+    const handleItemChosen = () => {
+        setExerciseList([...exerciseList, exercise]);
+    }
+
     const items = [
         {
             key: '1',
             label: 'About',
             children: (
                 <>
-                <Text strong>Exercise name: <span>{props.name}</span>
+                <Text strong>Exercise name: <span>{exercise.name}</span>
                 <br />
                 </Text>
-                <Text strong>Target muscle: <span>{props.muscle
+                <Text strong>Target muscle: <span>{exercise.muscle
                     .split('_')
                     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
                     .join(' ')}</span>
                 </Text>
                 <br />
-                {!props.difficulty ? null : <Text strong>Difficulty: {props.difficulty.charAt(0).toUpperCase() + props.difficulty.slice(1)}</Text>}
+                {!exercise.difficulty ? null : <Text strong>Difficulty: {exercise.difficulty.charAt(0).toUpperCase() + exercise.difficulty.slice(1)}</Text>}
                 <Divider />
-                {!props.instructions ? <><Text strong>Instructions: </Text><Empty description='No instructions for custom exercises'/></> : <><Text strong>Instructions: </Text><br /><Text>
-                        {props.instructions}
+                {!exercise.instructions ? <><Text strong>Instructions: </Text><Empty description='No instructions for custom exercises'/></> : <><Text strong>Instructions: </Text><br /><Text>
+                        {exercise.instructions}
                     </Text></>}
                 </>
             )
@@ -46,10 +50,10 @@ export default function ExerciseDetails(props) {
 
     return (
         <>
-        <List.Item className="hoverable-item" style={{
+        <List.Item key={exercise._id} className="hoverable-item" style={{
             paddingLeft: '1.5rem'
-        }} onClick={handleItemClick}
-        >{props.name}</List.Item>
+        }} onClick={!isExerciseModalOpen ? handleItemClick : handleItemChosen}
+        >{exercise.name}</List.Item>
         <Modal
         // exercise details modal
             title="Exercise Details"

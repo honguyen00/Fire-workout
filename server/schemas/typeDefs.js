@@ -16,6 +16,24 @@ const typeDefs = `
         customed: Boolean
     }
 
+    type Workout {
+        _id: ID
+        userId: ID
+        title: String
+        date: String
+        exercises: [Exercise]
+    }
+
+    type Set {
+        repetitions: Int
+        weight: Float
+    }
+
+    type Exercise {
+        exerciseId: ID!
+        sets: [Set]
+    }
+
     type Auth {
         token: ID!
         user: User
@@ -27,11 +45,24 @@ const typeDefs = `
         getPersonalExercises: [Exercise]
     }
 
+    # Create an input type for Exercise
+    input ExerciseInput {
+        exerciseId: ID!
+        sets: [SetInput]
+    }
+
+    # Create an input type for Set
+    input SetInput {
+        repetitions: Int!
+        weight: Float!
+    }
+
     type Mutation {
         login(email: String!, password: String!): Auth
         addUser(username: String!, email: String!, password: String!): Auth
         updatePassword(password: String!): User
         createNewExercise(exerciseName: String!, muscle: String!): User
+        addWorkout(title: String!, date: String!, exercises: [ExerciseInput]): Workout
     }
 `;
 

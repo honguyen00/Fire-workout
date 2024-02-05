@@ -1,7 +1,6 @@
 const { Schema, model } = require('mongoose');
 
-const setSchema = new Schema({
-  sets: [
+const setSchema = new Schema([
     {
       repetitions: {
         type: Number,
@@ -12,7 +11,6 @@ const setSchema = new Schema({
         required: true,
       },
     }
-  ],
-});
+  ]);
 
 module.exports = setSchema ;

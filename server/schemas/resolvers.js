@@ -1,4 +1,5 @@
 const { User, Exercises } = require('../models');
+const Workout = require('../models/Workout');
 
 const { signToken, AuthenticationError } = require('../utils/auth');
 
@@ -69,6 +70,14 @@ const resolvers = {
                 return user
             }
             throw AuthenticationError;
+        },
+        addWorkout: async(parent, args, context) => {
+            console.log(args);
+            if(context.user) {
+                const workout = await Workout.create({userId: context.user._id, ...args});
+                return workout
+            }
+            throw AuthenticationError
         }
     }
 }
