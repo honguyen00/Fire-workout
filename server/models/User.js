@@ -19,7 +19,6 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    created_exercises: [exerciseSchema]
   },
   // set this to use virtual below
   {

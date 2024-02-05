@@ -19,9 +19,8 @@ const exerciseSchema = new Schema(
     difficulty: {
         type: String
     },
-    customed: {
-      type: Boolean,
-      default: false
+    userId: {
+       type: Schema.Types.ObjectId,
     }
   }
 );

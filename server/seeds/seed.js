@@ -11,6 +11,7 @@
 
 const db = require('../config/connection');
 const { Exercises } = require('../models/Exercises');
+const Workout = require('../models/Workout');
 const cleanDB = require('./cleanDB');
 
 const listOfMuscle = [
@@ -42,6 +43,7 @@ const option = {
 
 db.once('open', async () => {
     // clean database
+    await cleanDB("Workouts", "workouts");
     await cleanDB("Exercises", "exercises");
     
     // Create an array of promises for each fetch call

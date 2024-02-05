@@ -22,3 +22,38 @@ query Query {
     }
   }
 `;
+
+export const GET_WORKOUT = gql`
+query GetWorkoutHistory {
+  getWorkoutHistory {
+    _id
+    title
+    date
+    exercises {
+      sets {
+        repetitions
+        weight
+      }
+      exerciseId {
+        name
+      }
+    }
+  }
+}
+`;
+
+export const GET_TEMPLATE = gql`
+query Query {
+  getTemplate {
+    exerciseId {
+      name
+      _id
+      difficulty
+      equipment
+      instructions
+      muscle
+      userId
+    }
+  }
+}
+`

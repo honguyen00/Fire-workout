@@ -36,29 +36,40 @@ mutation Mutation($password: String!) {
 
 export const CREATE_EXERCISE = gql`
 mutation Mutation($exerciseName: String!, $muscle: String!) {
-    createNewExercise(exerciseName: $exerciseName, muscle: $muscle) {
-      _id
-      created_exercises {
-        _id
-        name
-        muscle
-      }
-    }
+  createNewExercise(exerciseName: $exerciseName, muscle: $muscle) {
+    _id
+    userId
+    name
+    muscle
   }
+}
 `
 
 export const ADD_WORKOUT = gql`
-mutation Mutation($title: String!, $date: String!, $exercises: [ExerciseInput]) {
-  addWorkout(title: $title, date: $date, exercises: $exercises) {
+mutation AddWorkout($exercises: [ExerciseInput], $date: String!, $title: String!) {
+  addWorkout(exercises: $exercises, date: $date, title: $title) {
     _id
-    title
     date
     exercises {
-      _id
+      exerciseId {
+        name
+      }
       sets {
         repetitions
         weight
       }
+    }
+    template
+    title
+  }
+}
+`
+export const CREATE_TEMPLATE = gql`
+mutation CreateTemplate($createTemplateId: [ID]!) {
+  createTemplate(id: $createTemplateId) {
+    userId
+    exerciseId {
+      _id
     }
   }
 }

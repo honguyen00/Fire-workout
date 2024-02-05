@@ -2,8 +2,9 @@ import { Empty, List, Modal, Tabs } from "antd";
 import { Divider, Typography } from 'antd';
 const { Title, Paragraph, Text, Link } = Typography;
 import { useState } from 'react'
+import { CheckOutlined } from '@ant-design/icons'
 
-export default function ExerciseDetails({exercise, isExerciseModalOpen, exerciseList, setExerciseList}) {
+export default function ExerciseDetails({exercise, isExerciseModalOpen, exerciseList, setExerciseList, isTemplateOpen}) {
     const [exerciseDetailsModal, setExerciseDetailsModal] = useState(false);
 
     const handleItemClick = () => {
@@ -15,8 +16,16 @@ export default function ExerciseDetails({exercise, isExerciseModalOpen, exercise
     }
 
     const handleItemChosen = () => {
-        setExerciseList([...exerciseList, exercise]);
-    }
+        // Toggle selection
+        if(exerciseList.length != 0 && exerciseList.some((element) => element._id == exercise._id))
+        {
+            setExerciseList((prevList) =>
+              prevList.filter((item) => item._id !== exercise._id)
+            );
+        } else {
+            setExerciseList((prevList) => [...prevList, exercise])
+        }
+    };
 
     const items = [
         {
@@ -41,10 +50,6 @@ export default function ExerciseDetails({exercise, isExerciseModalOpen, exercise
                 </>
             )
         },
-        {
-            key: '2',
-            label: 'History'
-        }
     ]
 
 
@@ -52,8 +57,8 @@ export default function ExerciseDetails({exercise, isExerciseModalOpen, exercise
         <>
         <List.Item key={exercise._id} className="hoverable-item" style={{
             paddingLeft: '1.5rem'
-        }} onClick={!isExerciseModalOpen ? handleItemClick : handleItemChosen}
-        >{exercise.name}</List.Item>
+        }} onClick={(!isExerciseModalOpen && !isTemplateOpen) ? handleItemClick : handleItemChosen}
+        >{<div style={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>{exercise.name}<div>{(exerciseList && exerciseList.some((element) => element._id == exercise._id)) ? <CheckOutlined /> : null}</div></div>}</List.Item>
         <Modal
         // exercise details modal
             title="Exercise Details"

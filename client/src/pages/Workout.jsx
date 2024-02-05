@@ -1,22 +1,26 @@
-import { Divider, Typography, Button, Drawer, Input, List, Modal, message} from 'antd';
-const { Title } = Typography;
+import { Divider, Typography, Button, Drawer, Input, List, Modal, message, Empty, Card} from 'antd';
+const { Title, Text } = Typography;
 import { PlusOutlined, DownOutlined, UpOutlined } from '@ant-design/icons'
 import { useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import ExerciseCard  from '../components/ExerciseCard'
 import Exercises from './Exercises';
-import { useMutation } from '@apollo/client';
-import {ADD_WORKOUT } from '../utils/mutation'
+import { useMutation, useQuery } from '@apollo/client';
+import {ADD_WORKOUT, CREATE_EXERCISE, CREATE_TEMPLATE } from '../utils/mutation'
+import { GET_TEMPLATE } from '../utils/queries';
+import TemplateCard from '../components/TemplateCard';
 
 export default function Workout() {
     const [open, setOpen] = useState(false);
     const [collapsed, setCollapsed] = useState(false);
     const [exerciseList, setExerciseList] = useState([]);
     const [isExerciseModalOpen, setIsModalOpen] = useState(false);
+    const [isTemplateOpen, setIsTemplateOpen] = useState(false);
     const [workoutName, setWorkoutName] = useState('Default Workout Name');
-    const [addWorkout, {error}] = useMutation(ADD_WORKOUT)
-
+    const [addWorkout, {error1}] = useMutation(ADD_WORKOUT)
+    const [createTemplate, {error2}] = useMutation(CREATE_TEMPLATE)
+    const {loading, data} = useQuery(GET_TEMPLATE);
     //Error submit workout
     const [messageApi, contextHolder] = message.useMessage()
     const errorSubmitWorkout = () => {
@@ -26,14 +30,14 @@ export default function Workout() {
         });
     };
 
-    const successSubmitWorkout = () => {
+    const successSubmitWorkout = (message) => {
         messageApi
           .open({
             type: 'loading',
             content: 'Loading..',
-            duration: 2,
+            duration: 1,
           })
-          .then(() => message.success('Workout Submitted', 1))
+          .then(() => message.success(`${message}`, 1))
           .then(() => window.location.replace('/history'));
       };
 
@@ -105,10 +109,22 @@ export default function Workout() {
                     sets: exercise.sets
                 }
             });
+            const currentDate = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                hour12: true,
+            };
+            const formattedDateTime = currentDate.toLocaleString('en-US', options);
+
             const workoutData = {
                 title: document.getElementById('workout-name').value || 'Default Workout Name',
-                date: new Date().toDateString(),
-                exercises: allSetData
+                date: formattedDateTime,
+                exercises: allSetData,
             }
             try {
                 const newWorkout = await addWorkout({
@@ -116,7 +132,7 @@ export default function Workout() {
                 });
                 if (newWorkout) {      
                     onHide();
-                    successSubmitWorkout();
+                    successSubmitWorkout('Workout Submitted!');
                 }
             } catch (error) {
                 console.error(error)
@@ -126,6 +142,14 @@ export default function Workout() {
         }
     };
     
+    //create template modal
+    const showCreateTemplate = () => {
+        setIsTemplateOpen(true)
+    }
+
+    const handleCreateTemplate = () => {
+
+    }
 
     return (
     <div id='workout-landing'>
@@ -135,11 +159,29 @@ export default function Workout() {
     <Button type='primary' className='responsive-button' style={{textAlign: 'center'}}
     onClick={showWorkout}>START AN EMPTY WORKOUT</Button>
     </div>
+
     <Divider />
+
     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <Title level={2}>My Templates</Title>
-        <Button><PlusOutlined /></Button>
+        <Button onClick={showCreateTemplate}><PlusOutlined /></Button>
     </div>
+    
+    <div>
+        {loading ? <h3>Loading...</h3> : 
+        <div style={{display: 'flex', flexDirection: 'row', width: '100%', alignItems: 'stretch', gap: '1rem'}}>{data.getTemplate.length == 0 ? <Empty /> : data.getTemplate.map((item, index) => {
+            return(
+                <div style={{flexGrow: 1}}>
+                <Card bordered={false} key={index} style={{height: '100%'}}
+                    title={'Template ' + (index+1)}>
+                    <TemplateCard key={item._id} setExerciseList={setExerciseList} item={item.exerciseId}/>
+                </Card>
+                </div>
+            )
+        })}</div>
+        }
+    </div>
+
     <Drawer
         title={
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
@@ -181,12 +223,21 @@ export default function Workout() {
             <Button danger onClick={onHide}>Cancel Workout</Button>
         </div>
     </Drawer>
+
     <Modal top title="Add Exercises To Workout" open={isExerciseModalOpen} onOk={() => {setIsModalOpen(false)}} onCancel={() => {setIsModalOpen(false)}}
         style={{height: '70%', overflowY: 'auto', scrollbarWidth: 'none',
         scrollbarColor: 'transparent transparent'}}
         cancelButtonProps={{ style: { display: 'none' } }}
     >
         <Exercises isExerciseModalOpen={isExerciseModalOpen} exerciseList={exerciseList} setExerciseList={setExerciseList}/>
+    </Modal>
+
+    <Modal top title="Add Exercises To Template" open={isTemplateOpen} onOk={() => {setIsTemplateOpen(false)}} onCancel={() => {setIsTemplateOpen(false); setExerciseList([])}}
+        style={{height: '70%', overflowY: 'auto', scrollbarWidth: 'none',
+        scrollbarColor: 'transparent transparent'}}
+        cancelButtonProps={{ style: { display: 'none' } }}
+    >
+        <Exercises isTemplateOpen={isTemplateOpen} exerciseList={exerciseList} setExerciseList={setExerciseList}/>
     </Modal>
     </div>
     )

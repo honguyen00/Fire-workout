@@ -19,7 +19,11 @@ const workoutSchema = new Schema(
             exerciseId: {type: Schema.Types.ObjectId, ref: 'Exercises'},
             sets: [setSchema]
         }
-    ]
+    ],
+    template: {
+      type: Boolean,
+      default: false
+    }
   }
 );
 

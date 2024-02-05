@@ -7,7 +7,7 @@ import { Button, Checkbox, Modal, FloatButton, Tooltip, Input, Dropdown, Form, S
 import { useState } from 'react';
 import { CREATE_EXERCISE } from '../utils/mutation';
 
-export default function Exercises({ isExerciseModalOpen, exerciseList, setExerciseList }) {
+export default function Exercises({ isExerciseModalOpen, exerciseList, setExerciseList, isTemplateOpen }) {
     const [musclesModal, setMusclesModal] = useState(false);
     const [exerciseModal, setExerciseModal] = useState(false);
     const [selectedMuscles, setSelectedMuscles] = useState([]);
@@ -112,11 +112,12 @@ export default function Exercises({ isExerciseModalOpen, exerciseList, setExerci
                             setMusclesModal(true)
                         }}><FilterOutlined /></Button>
                     </div>
-                    <ExerciseList groupedExercises={newList} isExerciseModalOpen={isExerciseModalOpen} exerciseList={exerciseList} setExerciseList={setExerciseList}/>
-                    <FloatButton style={!isExerciseModalOpen ? {
+                    <div style={{color: 'green'}}> {isTemplateOpen ? 'Chosen exercises: ' : null}<span style={{color: '#a3d721'}}>{isTemplateOpen ? exerciseList.map((item) => item.name + ', ') : null}</span></div>
+                    <ExerciseList groupedExercises={newList} isExerciseModalOpen={isExerciseModalOpen} exerciseList={exerciseList} setExerciseList={setExerciseList} isTemplateOpen={isTemplateOpen}/>
+                    <FloatButton style={(!isExerciseModalOpen && !isTemplateOpen) ? {
                         position: 'absolute',
                         bottom: '12%'
-                    } : {position: 'absolute', bottom: '60px'}} className={!isExerciseModalOpen ? 'float-button' : null} type='primary' icon={<PlusOutlined />} 
+                    } : {position: 'absolute', bottom: '60px'}} className={(!isExerciseModalOpen && !isTemplateOpen)? 'float-button' : null} type='primary' icon={<PlusOutlined />} 
                     tooltip={<><div>Missing your favourite exercise?</div><div>Add now!</div></>}
                     onClick={() => {
                         setExerciseModal(true)

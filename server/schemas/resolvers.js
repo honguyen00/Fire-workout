@@ -1,4 +1,4 @@
-const { User, Exercises } = require('../models');
+const { User, Exercises, Template } = require('../models');
 const Workout = require('../models/Workout');
 
 const { signToken, AuthenticationError } = require('../utils/auth');
@@ -13,19 +13,31 @@ const resolvers = {
         },
         getExercises: async (parent, args, context) => {
             if(context.user) {
-                const defaultEx = await Exercises.find({});
-                const user = await User.findById(context.user._id).populate('created_exercises')
-                const allExercise = defaultEx.concat(user.created_exercises);
-                return allExercise;
+                const exercisesWithoutUserId = await Exercises.find({ userId: { $exists: false } });
+
+                const exercisesWithUserId = await Exercises.find({ userId: context.user._id });
+
+                const allExercises = exercisesWithoutUserId.concat(exercisesWithUserId);
+
+                return allExercises;
             }
             throw AuthenticationError
             
         },
-        getPersonalExercises: async (parent, args, context) => {
-            if (context.user) {
-                const user = await User.findById(context.user._id).populate('created_exercises');
-                return user.created_exercises;
-            }   
+        getWorkoutHistory: async (parent, args,  context) => {
+            if(context.user) {
+                const workouts = await Workout.find({userId: context.user._id})
+                .populate('exercises.exerciseId');
+                return workouts;
+            }
+            throw AuthenticationError
+        },
+        getTemplate: async (parent, args, context) => {
+            if(context.user) {
+                const template = await Template.find({userId: context.user._id})
+                .populate('exerciseId');
+                return template
+            }
             throw AuthenticationError
         }
     },
@@ -64,18 +76,24 @@ const resolvers = {
         },
         createNewExercise: async (parent, args, context) => {
             if (context.user) {
-                const user = await User.findById(context.user._id);
-                user.created_exercises.push({name: args.exerciseName, muscle: args.muscle, customed: true});
-                await user.save();
-                return user
+                console.log(context.user._id)
+                const newex = await Exercises.create({name: args.exerciseName, muscle: args.muscle, userId: context.user._id})
+                return newex
             }
             throw AuthenticationError;
         },
         addWorkout: async(parent, args, context) => {
-            console.log(args);
             if(context.user) {
                 const workout = await Workout.create({userId: context.user._id, ...args});
                 return workout
+            }
+            throw AuthenticationError
+        },
+        createTemplate: async(parent, args, context) => {
+            console.log(args)
+            if(context.user) {
+                const template = await Template.create({ userId: context.user._id, exerciseId: args.id });
+                return template;
             }
             throw AuthenticationError
         }

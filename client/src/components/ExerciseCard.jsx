@@ -5,7 +5,7 @@ import { DeleteFilled, CloseOutlined } from "@ant-design/icons"
 export default function ExerciseCard({ exercise, index, moveCard, setExerciseList }) {
   const [set, setSet] = useState([
     // Your initial data
-    { key: '1', set: 1, previousRecord: 'N/A', weight: '', repetitions: '' },
+    { key: '1', set: 1, weight: '', repetitions: '' },
   ]);
 
   //Add a set to an exercise
@@ -13,7 +13,6 @@ export default function ExerciseCard({ exercise, index, moveCard, setExerciseLis
     const newItem = {
       key: String(set.length + 1),
       set: set.length + 1,
-      previousRecord: 'N/A',
       weight: '',
       repetitions: '',
     };
@@ -61,12 +60,6 @@ export default function ExerciseCard({ exercise, index, moveCard, setExerciseLis
       dataIndex: 'set',
       key: 'set',
       render: (text) => <strong>{text}</strong>,
-    },
-    {
-      title: 'Previous',
-      dataIndex: 'previousRecord',
-      key: 'previousRecord',
-      render: (text) => <span>{text}</span>,
     },
     {
       title: 'Kg',
