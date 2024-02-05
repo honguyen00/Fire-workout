@@ -1,4 +1,4 @@
-import { Divider, Typography, Button, Drawer, Input, List, Modal} from 'antd';
+import { Divider, Typography, Button, Drawer, Input, List, Modal, message} from 'antd';
 const { Title } = Typography;
 import { PlusOutlined, DownOutlined, UpOutlined } from '@ant-design/icons'
 import { useState } from 'react';
@@ -16,6 +16,27 @@ export default function Workout() {
     const [isExerciseModalOpen, setIsModalOpen] = useState(false);
     const [workoutName, setWorkoutName] = useState('Default Workout Name');
     const [addWorkout, {error}] = useMutation(ADD_WORKOUT)
+
+    //Error submit workout
+    const [messageApi, contextHolder] = message.useMessage()
+    const errorSubmitWorkout = () => {
+        messageApi.open({
+          type: 'error',
+          content: 'Please provide valid values for reps and weight',
+        });
+    };
+
+    const successSubmitWorkout = () => {
+        messageApi
+          .open({
+            type: 'loading',
+            content: 'Loading..',
+            duration: 2,
+          })
+          .then(() => message.success('Workout Submitted', 1))
+          .then(() => window.location.replace('/history'));
+      };
+
     const showWorkout = () => {
         setOpen(true);
     }
@@ -35,35 +56,73 @@ export default function Workout() {
         setIsModalOpen(true);
     }
 
+    //set workout name
     const handleInputChange = (e) => {
         const value = e.target.value;
         setWorkoutName(value);
     };
 
+    //validate numbers
+    const validateInput = (field, value) => {
+        if (field === 'weight') {
+          return value && !isNaN(value) && parseFloat(value) >= 0;
+        } else if (field === 'repetitions') {
+          return value && !isNaN(value) && parseInt(value) > 0;
+        }
+        return true; // Default to true if no specific validation for the field
+    };
+
+    //check if all inputs from user are valid
+    const isExerciseListValid = () => {
+        // Iterate over each exercise in exerciseList
+        for (const exercise of exerciseList) {
+          // Check if the exercise has sets
+          if (exercise.sets) {
+            // Iterate over each set in the exercise
+            for (const set of exercise.sets) {
+              // Validate weight and repetitions
+              if (!validateInput('weight', set.weight) || !validateInput('repetitions', set.repetitions)) {
+                return false; // Invalid input found
+              }
+            }
+          } else {
+            return false;
+          }
+        }
+        return true; // All sets are valid
+    };
+      
+
     const handleFinishButtonClick = async () => {
         // Access set data from all ExerciseCards
-        const allSetData = exerciseList.map((exercise) => {return {
-            exerciseId: exercise._id,
-            sets: exercise.sets
+        if(exerciseList.length == 0) {
+            return
         }
-        });
-        const workoutData = {
-            title: document.getElementById('workout-name').value || 'Default Workout Name',
-            date: new Date().toDateString(),
-            exercises: allSetData
-        }
-        console.log('All Set Data:', workoutData);
-        try {
-            const newWorkout = await addWorkout({
-                variables: {...workoutData}
+        if(isExerciseListValid()) {
+            const allSetData = exerciseList.map((exercise) => {
+                return {
+                    exerciseId: exercise._id,
+                    sets: exercise.sets
+                }
             });
-            if (newWorkout) {
-                console.log(newWorkout)
-                onHide();
-
+            const workoutData = {
+                title: document.getElementById('workout-name').value || 'Default Workout Name',
+                date: new Date().toDateString(),
+                exercises: allSetData
             }
-        } catch (error) {
-            console.error(error)
+            try {
+                const newWorkout = await addWorkout({
+                    variables: {...workoutData}
+                });
+                if (newWorkout) {      
+                    onHide();
+                    successSubmitWorkout();
+                }
+            } catch (error) {
+                console.error(error)
+            }
+        } else {
+            errorSubmitWorkout();
         }
     };
     
@@ -102,6 +161,7 @@ export default function Workout() {
         style={collapsed ? {overflowY: 'none !important'} : null}
         maskClosable={false}
         >
+            {contextHolder}
             {/* Drag and drop list */}
             <DndProvider backend={HTML5Backend}>
             <List

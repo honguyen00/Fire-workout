@@ -45,6 +45,6 @@ export default function Footer() {
         <CustomNavLink to="/history" className={({isActive}) => isActive ? 'active' : null}><NavContent><box-icon color='white' name='history'></box-icon>History</NavContent></CustomNavLink>
         <CustomNavLink to="/workout" className={({isActive}) => isActive ? 'active' : null}><NavContent><box-icon color='white' type='solid' name='plus-circle'></box-icon>Workout</NavContent></CustomNavLink>
         <CustomNavLink to="/exercises" className={({isActive}) => isActive ? 'active' : null}><NavContent><box-icon color='white' name='dumbbell'></box-icon>Exercises</NavContent></CustomNavLink>
-        <CustomNavLink to="/support" className={({isActive}) => isActive ? 'active' : null}><NavContent><box-icon type='solid' color='white' name='donate-heart'></box-icon>Support us</NavContent></CustomNavLink> 
+        <CustomNavLink to="/support" className={({isActive}) => isActive ? 'active' : null}><NavContent><box-icon type='solid' color='white' name='donate-heart'></box-icon>Support</NavContent></CustomNavLink> 
     </CustomNav>
 }

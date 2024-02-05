@@ -48,11 +48,13 @@ export default function ExerciseCard({ exercise, index, moveCard, setExerciseLis
     })
   }
 
+  //delete the exercise from exerciseList
   const handleDeleteExercise = () => {
     // Remove the entire exercise from the state
     setExerciseList((prevList) => prevList.filter((item) => item._id !== exercise._id));
   };
 
+  //table-like design for inputing workout details
   const columns = [
     {
       title: 'Set',
@@ -67,7 +69,7 @@ export default function ExerciseCard({ exercise, index, moveCard, setExerciseLis
       render: (text) => <span>{text}</span>,
     },
     {
-      title: 'Weight',
+      title: 'Kg',
       dataIndex: 'weight',
       key: 'weight',
       render: (text, record) => (
@@ -89,7 +91,6 @@ export default function ExerciseCard({ exercise, index, moveCard, setExerciseLis
           onChange={(e) => handleInputChange(record.key, 'repetitions', e.target.value)}
           inputMode="numeric"
           pattern="\d*"
-          rule={{required: true, message: 'input cannot be null'}}
         />
       ),
     },
@@ -97,29 +98,45 @@ export default function ExerciseCard({ exercise, index, moveCard, setExerciseLis
       title: 'Actions',
       key: 'actions',
       render: (text, record) => (
-        <>
+        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
           <Button danger onClick={() => handleDeleteSet(record.key)}>
           <DeleteFilled />
           </Button>
-        </>
+        </div>
       ),
     },
   ];
 
-  const handleInputChange = (key, field, value) => {
-    const updatedData = set.map((item) =>
-      item.key === key ? { ...item, [field]: value } : item
-    );
+  const validateInput = (field, value) => {
+    // Implement your validation criteria here
+    if (field === 'weight') {
+      // Example: Ensure weight is a positive number
+      return value && !isNaN(value) && parseFloat(value) >= 0;
+    } else if (field === 'repetitions') {
+      // Example: Ensure repetitions is a positive integer
+      return value && !isNaN(value) && parseInt(value) > 0;
+    }
+    return true; // Default to true if no specific validation for the field
+  };
 
-    setSet(updatedData);
-    let setData = updatedData.map((s) => {return {repetitions: parseInt(s.repetitions), weight: parseFloat(s.weight)}})
-    // Pass the data data to the parent component
-    setExerciseList((prevList) => {
-      const updatedList = prevList.map((prevExercise) =>
-        prevExercise._id === exercise._id ? { ...prevExercise, sets: setData } : prevExercise
+  const handleInputChange = (key, field, value) => {
+    const isValidInput = validateInput(field, value);
+
+    if(isValidInput) {
+      const updatedData = set.map((item) =>
+      item.key === key ? { ...item, [field]: value } : item
       );
-      return updatedList;
-    });
+
+      setSet(updatedData);
+      let setData = updatedData.map((s) => {return {repetitions: parseInt(s.repetitions), weight: parseFloat(s.weight)}})
+      // Pass the data data to the parent component
+      setExerciseList((prevList) => {
+        const updatedList = prevList.map((prevExercise) =>
+          prevExercise._id === exercise._id ? { ...prevExercise, sets: setData } : prevExercise
+        );
+        return updatedList;
+      });
+    }
   };
     
   const [{ isDragging }, drag, dragPreview] = useDrag({
