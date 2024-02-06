@@ -27,7 +27,9 @@ export default function History() {
             const workoutHistory = [...data.getWorkoutHistory].reverse();
             if(workoutHistory.length == 0) {
                 return(
+                    <div style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
                     <Empty description='Finish a workout to see history.'/>
+                    </div>
                 )
             }
             else {
