@@ -25,6 +25,7 @@ export default function History() {
         }
         else {
             const workoutHistory = [...data.getWorkoutHistory].reverse();
+            <h1>History</h1>
             if(workoutHistory.length == 0) {
                 return(
                     <div style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
@@ -35,7 +36,6 @@ export default function History() {
             else {
                 return (
                     <>
-                    <h1>History</h1>
                     <Row gutter={[16, 16]}>
                         
                         {workoutHistory.map((workout) => {
