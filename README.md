@@ -21,7 +21,14 @@ N/A
 ## Usage
 Main features:
  - Browse and create exercises
- -
+ <br />
+![Demo exercise list](./asset/images/exercises-demo.png)
+ - Start and easily track your workout
+![Demo start workout](./asset/images/workout-demo.png)
+ - View workout progress through history
+![Demo view history](./asset/images/history-demo.png)
+ - View workout frequency
+![Demo view profile](./asset/images/profile-demo.png)
 
 ## License
 This project is available under Apache 2.0 License
