@@ -48,7 +48,7 @@ const Login = () => {
             backgroundSize: 'cover',
             filter: 'blur(10px)',
             zIndex: '0',
-            width: '100%',
+            width: '95%',
             position: 'absolute'
         }}>
         </div>
