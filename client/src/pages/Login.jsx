@@ -3,6 +3,7 @@ import Auth from '../utils/auth';
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER, ADD_USER } from '../utils/mutation';
 import { passwordValidator, emailValidator } from '../helpers/inputValidations'
+import landingImage from '../assets/landing-background-img.jpg'
 
 const Login = () => {
     const [loginForm] = Form.useForm();
@@ -43,7 +44,7 @@ const Login = () => {
     <>
         <div style={{
             height: '100%',
-            background: 'url(../src/assets/landing-background-img.jpg) no-repeat center center fixed',
+            background: `url(${landingImage}) no-repeat center center fixed`,
             backgroundSize: 'cover',
             filter: 'blur(10px)',
             zIndex: '0',
