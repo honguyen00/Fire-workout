@@ -21,7 +21,6 @@ N/A
 ## Usage
 Main features:
  - Browse and create exercises
- <br />
 ![Demo exercise list](./asset/images/exercises-demo.png)
  - Start and easily track your workout
 ![Demo start workout](./asset/images/workout-demo.png)
