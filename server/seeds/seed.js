@@ -12,6 +12,7 @@
 const db = require('../config/connection');
 const { Exercises } = require('../models/Exercises');
 const Workout = require('../models/Workout');
+// const cleanDB = require('./cleanDB');
 
 const listOfMuscle = [
     "abdominals",
@@ -42,14 +43,14 @@ const option = {
 
 db.once('open', async () => {
     // clean database
-    // await cleanDB("Workouts", "workouts");
+    // await cleanDB("Workout", "workouts");
     // await cleanDB("Exercises", "exercises");
     
     // Create an array of promises for each fetch call
     const fetchPromises = listOfMuscle.map(muscle => {
         return fetch(url + muscle, option)
             .then(res => res.json())
-            .then(result => {
+            .then((result) => {
                 return result.map(item => ({
                     name: item.name,
                     muscle: item.muscle,
