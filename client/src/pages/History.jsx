@@ -28,7 +28,8 @@ export default function History() {
             <h1>History</h1>
             if(workoutHistory.length == 0) {
                 return(
-                    <><h1>History</h1>
+                    <>
+                    <h1>History</h1>
                     <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
                         <Empty description='Finish a workout to see history.' />
                     </div></>
@@ -37,8 +38,8 @@ export default function History() {
             else {
                 return (
                     <>
+                    <h1>History</h1>
                     <Row gutter={[16, 16]}>
-                        <h1>History</h1>
                         {workoutHistory.map((workout) => {
                             return (
                                 <Col xs={24} md={12} lg={8} key={workout._id}>

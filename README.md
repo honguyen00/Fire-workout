@@ -1,8 +1,38 @@
-# React + Vite
+# Workout Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Description
+This is an application that allow users to browse and create their favorite exercises, add them to their workout and track their progress.<br/>
 
-Currently, two official plugins are available:
+You can visit our deployed web app here: https://workout-tracker-574o.onrender.com
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
+## Table of Contents
+- [Installation](#installation)
+- [Usage](#usage)
+- [License](#license)
+- [Contributing](#contributing)
+- [Tests](#tests)
+- [Questions](#questions)
+
+## Installation
+N/A
+
+## Usage
+Main features:
+ - Browse and create exercises
+ -
+
+## License
+This project is available under Apache 2.0 License
+- For questions about forking our project and more, refer to [Questions](#questions)
+
+## Contributing 
+N/A
+
+## Tests
+N/A
+
+## Questions
+If you have any questions and need to contact me, feel free to reach out at lehonguyen00@gmail.com.<br/>
+Or visit my [Github](https://github.com/honguyen00) for more information.
