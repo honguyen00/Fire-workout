@@ -8,6 +8,7 @@ import Exercises from './pages/Exercises.jsx'
 import Workout from './pages/Workout.jsx'
 import History from './pages/History.jsx'
 import Support from './pages/Support.jsx'
+import Success from './pages/Success.jsx'
 
 
 const router = createBrowserRouter([
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: '/support',
         element: <Support />
+      },
+      {
+        path: '/success',
+        element: <Success />
       }
     ]
   }

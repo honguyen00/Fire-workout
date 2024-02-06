@@ -45,6 +45,10 @@ const typeDefs = `
         user: User
     }
 
+    type Checkout {
+        session: ID
+    }
+
     # Create an input type for Exercise
     input ExerciseInput {
         exerciseId: ID!
@@ -68,6 +72,7 @@ const typeDefs = `
         getWorkoutHistory: [Workout]
         getTemplate: [Template]
         getWorkoutDate: [String]
+        checkout: Checkout
     }
 
     type Mutation {

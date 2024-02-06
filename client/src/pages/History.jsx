@@ -38,7 +38,7 @@ export default function History() {
                                 <div style={{display: 'flex', flexDirection: 'column'}}>
                                     {workout.title}
                                     <Text style={{fontSize: 'small', fontWeight: 'lighter'}}>{workout.date}</Text>
-                                </div>}>
+                                </div>} style={{borderRadius: '1rem'}}>
                                 <div style={{display: 'flex', justifyContent: 'space-between'}}>
                                             <Text style={{fontWeight: 'bold'}}>Exercise</Text>
                                             <Text style={{fontWeight: 'bold'}}>Best Set</Text>

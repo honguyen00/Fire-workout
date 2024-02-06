@@ -64,3 +64,11 @@ query Query {
   getWorkoutDate
 }
 `
+
+export const QUERY_CHECKOUT = gql`
+  query getCheckout {
+    checkout {
+      session
+    }
+  }
+`;

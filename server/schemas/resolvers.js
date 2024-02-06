@@ -1,7 +1,7 @@
-const { User, Exercises, Template } = require('../models');
-const Workout = require('../models/Workout');
+const { User, Exercises, Template, Workout } = require('../models');
 
 const { signToken, AuthenticationError } = require('../utils/auth');
+const stripe = require('stripe')('sk_test_51OgfiuDnxOGikg97qQmLP0hXTi0sRy5T01mX0GV1YSX0IKHApR1glcDcyuvxSQVXyxMI4nomzEjYePawYjB0dHsM009XJP94ZW');
 
 const resolvers = {
     Query: {
@@ -49,6 +49,29 @@ const resolvers = {
             }
             throw AuthenticationError
         },
+        checkout: async (paren, args, context) => {
+            const url = new URL(context.headers.referer).origin;
+            const line_items = [{
+                price_data: {
+                    currency: 'usd',
+                    product_data: {
+                        name: 'One time support payment'
+                    },
+                    unit_amount: 500
+                },
+                quantity: 1
+            }];
+
+            const session = await stripe.checkout.sessions.create({
+                payment_method_types: ['card'],
+                line_items,
+                mode: 'payment',
+                success_url: `${url}/success?session_id={CHECKOUT_SESSION_ID}`,
+                cancel_url: `${url}/`,
+            });
+
+            return { session: session.id };
+        }
     },
 
     Mutation: {
