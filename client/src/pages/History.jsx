@@ -1,7 +1,7 @@
 import { GET_WORKOUT } from "../utils/queries";
 import { useMutation, useQuery } from '@apollo/client';
 import Auth from '../utils/auth'
-import { Card, Col, Row, Typography } from 'antd';
+import { Card, Col, Empty, Row, Typography } from 'antd';
 const { Text } = Typography;
 
 export default function History() {
@@ -25,47 +25,54 @@ export default function History() {
         }
         else {
             const workoutHistory = [...data.getWorkoutHistory].reverse();
-            return (
-                <>
-                <h1>History</h1>
-                <Row gutter={[16, 16]}>
-                    
-                    {workoutHistory.map((workout) => {
-                        return (
-                            <Col xs={24} md={12} lg={8} key={workout._id}>
-                                <Card bordered={false} key={workout._id}
-                                title={
-                                <div style={{display: 'flex', flexDirection: 'column'}}>
-                                    {workout.title}
-                                    <Text style={{fontSize: 'small', fontWeight: 'lighter'}}>{workout.date}</Text>
-                                </div>} style={{borderRadius: '1rem'}}>
-                                <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                                            <Text style={{fontWeight: 'bold'}}>Exercise</Text>
-                                            <Text style={{fontWeight: 'bold'}}>Best Set</Text>
-                                </div>
-                                {workout.exercises.map((exercise) => {
-                                    return (
-                                        <>
-                                        <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                                            <div>
-                                                <div style={{overflowX: 'hidden'}}>
-                                                    {exercise.sets.length + ' x ' + exercise.exerciseId.name}
+            if(workoutHistory.length == 0) {
+                return(
+                    <Empty description='Finish a workout to see history.'/>
+                )
+            }
+            else {
+                return (
+                    <>
+                    <h1>History</h1>
+                    <Row gutter={[16, 16]}>
+                        
+                        {workoutHistory.map((workout) => {
+                            return (
+                                <Col xs={24} md={12} lg={8} key={workout._id}>
+                                    <Card bordered={false} key={workout._id}
+                                    title={
+                                    <div style={{display: 'flex', flexDirection: 'column'}}>
+                                        {workout.title}
+                                        <Text style={{fontSize: 'small', fontWeight: 'lighter'}}>{workout.date}</Text>
+                                    </div>} style={{borderRadius: '1rem'}}>
+                                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                                                <Text style={{fontWeight: 'bold'}}>Exercise</Text>
+                                                <Text style={{fontWeight: 'bold'}}>Best Set</Text>
+                                    </div>
+                                    {workout.exercises.map((exercise) => {
+                                        return (
+                                            <>
+                                            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                                                <div>
+                                                    <div style={{overflowX: 'hidden'}}>
+                                                        {exercise.sets.length + ' x ' + exercise.exerciseId.name}
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    {exercise.sets[findPR(exercise.sets)].weight + 'kg x ' + exercise.sets[findPR(exercise.sets)].repetitions}  
                                                 </div>
                                             </div>
-                                            <div>
-                                                {exercise.sets[findPR(exercise.sets)].weight + 'kg x ' + exercise.sets[findPR(exercise.sets)].repetitions}  
-                                            </div>
-                                        </div>
-                                        </>
-                                    )
-                                })}
-                                </Card>
-                            </Col>
-                        )
-                    })}
-                </Row>
-                </>
-            )
+                                            </>
+                                        )
+                                    })}
+                                    </Card>
+                                </Col>
+                            )
+                        })}
+                    </Row>
+                    </>
+                )
+            }
         }
     } else {
         window.location.assign('/');
