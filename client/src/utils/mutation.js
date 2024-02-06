@@ -74,3 +74,9 @@ mutation CreateTemplate($createTemplateId: [ID]!) {
   }
 }
 `
+
+export const DELETE_TEMPLATE = gql`
+mutation Mutation($templateId: ID!) {
+  deleteTemplate(templateId: $templateId)
+}
+`

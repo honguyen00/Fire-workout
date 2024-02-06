@@ -92,8 +92,18 @@ button {
   width: 100%;
 }
 
+.responsive-card {
+  flex: 0 0 100%;
+}
+
 .ant-drawer .ant-drawer-content {
   overflow-y: hidden !important;
+}
+
+.ant-popconfirm .ant-popconfirm-message {
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 @media screen and (min-width: 768px) {
@@ -107,6 +117,9 @@ button {
   .responsive-button {
     width: 50%;
   }
+  .responsive-card {
+    flex: 0 0 45%;
+  }
 }
 
 @media screen and (min-width: 992px) {
@@ -116,6 +129,9 @@ button {
   }
   .responsive-button {
     width: 30%;
+  }
+  .responsive-card {
+    flex: 0 0 30%;
   }
 }
 

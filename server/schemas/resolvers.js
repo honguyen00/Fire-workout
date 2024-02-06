@@ -39,7 +39,16 @@ const resolvers = {
                 return template
             }
             throw AuthenticationError
-        }
+        },
+        getWorkoutDate: async (parent, args,  context) => {
+            if(context.user) {
+                const workouts = await Workout.find({userId: context.user._id})
+                // Extract dates from the workouts array
+                const datesArray = workouts.map(workout => workout.date);
+                return datesArray;
+            }
+            throw AuthenticationError
+        },
     },
 
     Mutation: {
@@ -90,10 +99,16 @@ const resolvers = {
             throw AuthenticationError
         },
         createTemplate: async(parent, args, context) => {
-            console.log(args)
             if(context.user) {
-                const template = await Template.create({ userId: context.user._id, exerciseId: args.id });
+                const template = await Template.create({ userId: context.user._id, exerciseId: args.createTemplateId });
                 return template;
+            }
+            throw AuthenticationError
+        },
+        deleteTemplate: async(parent, args, context) => {
+            if(context.user) {
+                const template = await Template.deleteOne({_id: args.templateId})
+                return (template.deletedCount == 1)
             }
             throw AuthenticationError
         }

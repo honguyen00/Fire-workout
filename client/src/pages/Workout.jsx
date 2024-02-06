@@ -1,13 +1,13 @@
-import { Divider, Typography, Button, Drawer, Input, List, Modal, message, Empty, Card} from 'antd';
+import { Divider, Typography, Button, Drawer, Input, List, Modal, message, Empty, Card, Popconfirm} from 'antd';
 const { Title, Text } = Typography;
-import { PlusOutlined, DownOutlined, UpOutlined } from '@ant-design/icons'
+import { PlusOutlined, DownOutlined, UpOutlined, DeleteFilled } from '@ant-design/icons'
 import { useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import ExerciseCard  from '../components/ExerciseCard'
 import Exercises from './Exercises';
 import { useMutation, useQuery } from '@apollo/client';
-import {ADD_WORKOUT, CREATE_EXERCISE, CREATE_TEMPLATE } from '../utils/mutation'
+import {ADD_WORKOUT, CREATE_EXERCISE, CREATE_TEMPLATE, DELETE_TEMPLATE } from '../utils/mutation'
 import { GET_TEMPLATE } from '../utils/queries';
 import TemplateCard from '../components/TemplateCard';
 
@@ -20,24 +20,27 @@ export default function Workout() {
     const [workoutName, setWorkoutName] = useState('Default Workout Name');
     const [addWorkout, {error1}] = useMutation(ADD_WORKOUT)
     const [createTemplate, {error2}] = useMutation(CREATE_TEMPLATE)
-    const {loading, data} = useQuery(GET_TEMPLATE);
+    const [deleteTemplate, {error3}] = useMutation(DELETE_TEMPLATE)
+    const {loading, data, refetch} = useQuery(GET_TEMPLATE);
+    let templateData;
+
     //Error submit workout
     const [messageApi, contextHolder] = message.useMessage()
-    const errorSubmitWorkout = () => {
+    const errorSubmitWorkout = (message) => {
         messageApi.open({
           type: 'error',
-          content: 'Please provide valid values for reps and weight',
+          content: message,
         });
     };
 
-    const successSubmitWorkout = (message) => {
+    const successSubmitWorkout = (info) => {
         messageApi
           .open({
             type: 'loading',
             content: 'Loading..',
             duration: 1,
           })
-          .then(() => message.success(`${message}`, 1))
+          .then(() => message.success(`${info}`, 1))
           .then(() => window.location.replace('/history'));
       };
 
@@ -96,7 +99,7 @@ export default function Workout() {
         return true; // All sets are valid
     };
       
-
+    //Submit workout
     const handleFinishButtonClick = async () => {
         // Access set data from all ExerciseCards
         if(exerciseList.length == 0) {
@@ -135,10 +138,10 @@ export default function Workout() {
                     successSubmitWorkout('Workout Submitted!');
                 }
             } catch (error) {
-                console.error(error)
+                errorSubmitWorkout('Error submit workout! Please try again')
             }
         } else {
-            errorSubmitWorkout();
+            errorSubmitWorkout('Error submit workout! Please try again');
         }
     };
     
@@ -147,98 +150,151 @@ export default function Workout() {
         setIsTemplateOpen(true)
     }
 
-    const handleCreateTemplate = () => {
+    const handleCreateTemplate = async () => {
+        // console.log(exerciseList)
+        const exerciseId = exerciseList.map((item) => item._id);
+        console.log(exerciseId)
+        try {
+            const { data } = await createTemplate({
+                variables: {createTemplateId: exerciseId}
+            });
+            if(data) {
+                refetch();
 
+            }
+        } catch (error) {
+            errorSubmitWorkout('Error submit template! Please try again')
+        }
     }
 
-    return (
-    <div id='workout-landing'>
-    <h1>Workout</h1>
-    <Title level={2}>Quick Start</Title>
-    <div style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
-    <Button type='primary' className='responsive-button' style={{textAlign: 'center'}}
-    onClick={showWorkout}>START AN EMPTY WORKOUT</Button>
-    </div>
+    const handleCloseTemplate = () => {setIsTemplateOpen(false); setExerciseList([])}
 
-    <Divider />
+    const startWorkoutTemplate = (index) => {
+        setExerciseList(templateData[index].exerciseId);
+        showWorkout();
+    }
 
-    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-        <Title level={2}>My Templates</Title>
-        <Button onClick={showCreateTemplate}><PlusOutlined /></Button>
-    </div>
-    
-    <div>
-        {loading ? <h3>Loading...</h3> : 
-        <div style={{display: 'flex', flexDirection: 'row', width: '100%', alignItems: 'stretch', gap: '1rem'}}>{data.getTemplate.length == 0 ? <Empty /> : data.getTemplate.map((item, index) => {
-            return(
-                <div style={{flexGrow: 1}}>
-                <Card bordered={false} key={index} style={{height: '100%'}}
-                    title={'Template ' + (index+1)}>
-                    <TemplateCard key={item._id} setExerciseList={setExerciseList} item={item.exerciseId}/>
-                </Card>
-                </div>
-            )
-        })}</div>
+    const handleDeleteTemplate = async (id) => {
+        try {
+            const { data } = await deleteTemplate({
+                variables: {templateId: id}
+            })
+            if(data) {
+                await new Promise((resolve) => {
+                    setTimeout(() => resolve(null), 2000);
+                });
+                await refetch()
+                return null;
+            }
+        } catch (error) {
+            errorSubmitWorkout('Error delete template! Please try again')
         }
-    </div>
+    }
 
-    <Drawer
-        title={
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                <div style={{display: 'flex', alignItems: 'center'}}>
-                <Button onClick={() => {setCollapsed(!collapsed)}}>{collapsed ? <UpOutlined /> : <DownOutlined />}</Button>
-                <Input inputMode='text' value={workoutName} onChange={handleInputChange} id='workout-name'/>
-                </div>
-            <Button type="primary" onClick={handleFinishButtonClick}>
-                Finish
-            </Button>
+    if(loading) {
+        return (
+            <h2>Loading...</h2>
+        )
+    } else {
+        templateData = data.getTemplate;
+        return (
+            <div id='workout-landing'>
+            <h1>Workout</h1>
+            <Title level={2}>Quick Start</Title>
+            <div style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+            <Button type='primary' className='responsive-button' style={{textAlign: 'center'}}
+            onClick={showWorkout}>START AN EMPTY WORKOUT</Button>
             </div>
-        }
-        placement="bottom"
-        closable={false}
-        onClose={onHide}
-        open={open}
-        height={collapsed ? '10%' :'100%'}
-        styles={collapsed ? {header: {minHeight: '100%'}, content: {overflowY: 'none'}} : null}
-        style={collapsed ? {overflowY: 'none !important'} : null}
-        maskClosable={false}
-        >
-            {contextHolder}
-            {/* Drag and drop list */}
-            <DndProvider backend={HTML5Backend}>
-            <List
-            dataSource={exerciseList}
-            renderItem={(exercise, index) => (
-                <ExerciseCard key={exercise._id}
-                exercise={exercise}
-                index={index}
-                moveCard={moveCard}
-                setExerciseList={setExerciseList}
-                />
-            )}
-            />
-            </DndProvider>
-        <div style={{display: 'flex', flexDirection: 'column', justifyItems: 'center', alignItems: 'center'}}>
-            <Button type='primary' style={{marginBottom: '5px'}} onClick={addExerciseToWorkout}>Add Exercises</Button>
-            <Button danger onClick={onHide}>Cancel Workout</Button>
-        </div>
-    </Drawer>
-
-    <Modal top title="Add Exercises To Workout" open={isExerciseModalOpen} onOk={() => {setIsModalOpen(false)}} onCancel={() => {setIsModalOpen(false)}}
-        style={{height: '70%', overflowY: 'auto', scrollbarWidth: 'none',
-        scrollbarColor: 'transparent transparent'}}
-        cancelButtonProps={{ style: { display: 'none' } }}
-    >
-        <Exercises isExerciseModalOpen={isExerciseModalOpen} exerciseList={exerciseList} setExerciseList={setExerciseList}/>
-    </Modal>
-
-    <Modal top title="Add Exercises To Template" open={isTemplateOpen} onOk={() => {setIsTemplateOpen(false)}} onCancel={() => {setIsTemplateOpen(false); setExerciseList([])}}
-        style={{height: '70%', overflowY: 'auto', scrollbarWidth: 'none',
-        scrollbarColor: 'transparent transparent'}}
-        cancelButtonProps={{ style: { display: 'none' } }}
-    >
-        <Exercises isTemplateOpen={isTemplateOpen} exerciseList={exerciseList} setExerciseList={setExerciseList}/>
-    </Modal>
-    </div>
-    )
+        
+            <Divider />
+        
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                <Title level={2}>My Templates</Title>
+                <Button onClick={showCreateTemplate}><PlusOutlined /></Button>
+            </div>
+            
+            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: '2rem', width: '100%', alignItems: 'stretch', flexWrap: 'wrap'}}>
+            {templateData.length == 0 ? <Empty /> : templateData.map((item, index) => {
+                return(
+                    <Card className='responsive-card' bordered={false} key={item._id} style={{minHeight: '100%'}}
+                        title={<div style={{display: 'flex', justifyContent: 'space-between'}}>Template {index+1}
+                        <div>
+                        <Button style={{marginRight: '1rem'}} type='primary' onClick={() => startWorkoutTemplate(index)}>Start</Button>
+                        <Popconfirm
+                            title="Delete Template"
+                            description="Are you sure to delete this template?"
+                            onConfirm={() => handleDeleteTemplate(item._id)}                         
+                            okText="Yes"
+                            cancelText="No"
+                        >
+                            <Button danger><DeleteFilled /></Button>
+                        </Popconfirm>
+                        </div></div>}>
+                        <TemplateCard key={item._id} setExerciseList={setExerciseList} item={item.exerciseId}/>
+                    </Card>
+            )})}
+            </div>
+                    
+            
+        
+            <Drawer
+                title={
+                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                        <div style={{display: 'flex', alignItems: 'center'}}>
+                        <Button onClick={() => {setCollapsed(!collapsed)}}>{collapsed ? <UpOutlined /> : <DownOutlined />}</Button>
+                        <Input inputMode='text' value={workoutName} onChange={handleInputChange} id='workout-name'/>
+                        </div>
+                    <Button type="primary" onClick={handleFinishButtonClick}>
+                        Finish
+                    </Button>
+                    </div>
+                }
+                placement="bottom"
+                closable={false}
+                onClose={onHide}
+                open={open}
+                height={collapsed ? '10%' :'100%'}
+                styles={collapsed ? {header: {minHeight: '100%'}, content: {overflowY: 'none'}} : null}
+                style={collapsed ? {overflowY: 'none !important'} : null}
+                maskClosable={false}
+                >
+                    {contextHolder}
+                    {/* Drag and drop list */}
+                    <DndProvider backend={HTML5Backend}>
+                    <List
+                    dataSource={exerciseList}
+                    renderItem={(exercise, index) => (
+                        <ExerciseCard key={exercise._id}
+                        exercise={exercise}
+                        index={index}
+                        moveCard={moveCard}
+                        setExerciseList={setExerciseList}
+                        />
+                    )}
+                    />
+                    </DndProvider>
+                <div style={{display: 'flex', flexDirection: 'column', justifyItems: 'center', alignItems: 'center'}}>
+                    <Button type='primary' style={{marginBottom: '5px'}} onClick={addExerciseToWorkout}>Add Exercises</Button>
+                    <Button danger onClick={onHide}>Cancel Workout</Button>
+                </div>
+            </Drawer>
+        
+            <Modal top title="Add Exercises To Workout" open={isExerciseModalOpen} onOk={() => {setIsModalOpen(false)}} onCancel={() => {setIsModalOpen(false)}}
+                style={{height: '70%', overflowY: 'auto', scrollbarWidth: 'none',
+                scrollbarColor: 'transparent transparent'}}
+                cancelButtonProps={{ style: { display: 'none' } }}
+            >
+                <Exercises isExerciseModalOpen={isExerciseModalOpen} exerciseList={exerciseList} setExerciseList={setExerciseList}/>
+            </Modal>
+        
+            <Modal top title="Add Exercises To Template" open={isTemplateOpen} okText='Save' onOk={handleCreateTemplate} onCancel={handleCloseTemplate}
+                style={{height: '70%', overflowY: 'auto', scrollbarWidth: 'none',
+                scrollbarColor: 'transparent transparent'}}
+                cancelButtonProps={{ style: { display: 'none' } }}
+            >
+                <Exercises isTemplateOpen={isTemplateOpen} exerciseList={exerciseList} setExerciseList={setExerciseList}/>
+            </Modal>
+            </div>
+            )
+    }
 }

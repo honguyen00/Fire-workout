@@ -45,6 +45,7 @@ query GetWorkoutHistory {
 export const GET_TEMPLATE = gql`
 query Query {
   getTemplate {
+    _id
     exerciseId {
       name
       _id
@@ -55,5 +56,11 @@ query Query {
       userId
     }
   }
+}
+`
+
+export const GET_DATE = gql`
+query Query {
+  getWorkoutDate
 }
 `

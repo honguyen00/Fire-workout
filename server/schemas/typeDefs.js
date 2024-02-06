@@ -3,7 +3,6 @@ const typeDefs = `
         _id: ID
         username: String
         email: String
-        created_exercises: [Exercise]!
     }
 
     type Exercise {
@@ -68,6 +67,7 @@ const typeDefs = `
         getPersonalExercises: [Exercise]
         getWorkoutHistory: [Workout]
         getTemplate: [Template]
+        getWorkoutDate: [String]
     }
 
     type Mutation {
@@ -76,7 +76,8 @@ const typeDefs = `
         updatePassword(password: String!): User
         createNewExercise(exerciseName: String!, muscle: String!): Exercise
         addWorkout(title: String!, date: String!, exercises: [ExerciseInput]): Workout
-        createTemplate(id: [ID]!): Template
+        createTemplate(createTemplateId: [ID]!): Template
+        deleteTemplate(templateId: ID!): Boolean
     }
 `;
 

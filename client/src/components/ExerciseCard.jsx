@@ -91,7 +91,7 @@ export default function ExerciseCard({ exercise, index, moveCard, setExerciseLis
       title: 'Actions',
       key: 'actions',
       render: (text, record) => (
-        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+        <div style={{display: 'flex', justifyContent: 'flex-start', alignItems: 'center'}}>
           <Button danger onClick={() => handleDeleteSet(record.key)}>
           <DeleteFilled />
           </Button>
