@@ -66,11 +66,9 @@ mutation AddWorkout($exercises: [ExerciseInput], $date: String!, $title: String!
 `
 export const CREATE_TEMPLATE = gql`
 mutation CreateTemplate($createTemplateId: [ID]!) {
-  createTemplate(id: $createTemplateId) {
+  createTemplate(createTemplateId: $createTemplateId) {
+    _id
     userId
-    exerciseId {
-      _id
-    }
   }
 }
 `

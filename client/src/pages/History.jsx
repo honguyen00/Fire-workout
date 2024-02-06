@@ -56,11 +56,9 @@ export default function History() {
                                     {workout.exercises.map((exercise) => {
                                         return (
                                             <>
-                                            <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                                                <div>
-                                                    <div style={{overflowX: 'hidden'}}>
-                                                        {exercise.sets.length + ' x ' + exercise.exerciseId.name}
-                                                    </div>
+                                            <div style={{display: 'flex', justifyContent: 'space-between'}}>                                         
+                                                <div style={{overflowX: 'hidden', width: '70%'}}>
+                                                    {exercise.sets.length + ' x ' + exercise.exerciseId.name}
                                                 </div>
                                                 <div>
                                                     {exercise.sets[findPR(exercise.sets)].weight + 'kg x ' + exercise.sets[findPR(exercise.sets)].repetitions}  

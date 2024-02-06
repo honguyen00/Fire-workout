@@ -151,20 +151,18 @@ export default function Workout() {
     }
 
     const handleCreateTemplate = async () => {
-        // console.log(exerciseList)
         const exerciseId = exerciseList.map((item) => item._id);
-        console.log(exerciseId)
         try {
             const { data } = await createTemplate({
                 variables: {createTemplateId: exerciseId}
             });
             if(data) {
                 refetch();
-
+                handleCloseTemplate();
             }
         } catch (error) {
             errorSubmitWorkout('Error submit template! Please try again')
-        }
+    }
     }
 
     const handleCloseTemplate = () => {setIsTemplateOpen(false); setExerciseList([])}

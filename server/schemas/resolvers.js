@@ -55,7 +55,7 @@ const resolvers = {
                 price_data: {
                     currency: 'usd',
                     product_data: {
-                        name: 'One time support payment'
+                        name: 'One-time Support Payment'
                     },
                     unit_amount: 500
                 },
